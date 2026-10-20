@@ -1081,7 +1081,7 @@
       const btn = document.getElementById('music-btn');
       if (!musicPlaying) {
         musicPlaying = true;
-        btn.textContent = '🎵 Soothing Music: ON';
+        btn.textContent = '🎵Music: ON';
         bgAudio.volume = 0.65;
         bgAudio.play().catch(() => {
           if (!synthActive) playSoothingSynth();
@@ -1089,7 +1089,7 @@
       } else {
         musicPlaying = false;
         synthActive = false;
-        btn.textContent = '🎵 Soothing Music: OFF';
+        btn.textContent = '🎵Music: OFF';
         bgAudio.pause();
         clearTimeout(melodyTimer);
       }
