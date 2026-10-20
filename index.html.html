@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy 20th Birthday, Roopali! 🎉</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070b24;
+      --card-bg: rgba(23, 30, 78, 0.78);
+      --card-border: rgba(120, 140, 255, 0.28);
+      --pink-btn: linear-gradient(90deg, #ff2a85, #ff5db1);
+      --gold: #f5b942;
+      --text-light: #eef1ff;
+      --text-muted: #b5c0f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        radial-gradient(circle at 50% 35%, #17215c 0%, #06091e 75%);
+      background-size: 38px 38px, 38px 38px, 100% 100%;
+      color: var(--text-light);
+      font-family: 'Poppins', sans-serif;
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* Music Toggle Button */
+    #music-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 60;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      border-radius: 50px;
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s;
+    }
+    #music-btn:hover {
+      transform: scale(1.06);
+    }
+
+    /* Top Hanging Moon & Stars Decoration */
+    .top-decor {
+      position: fixed;
+      top: -220px;
+      left: 0;
+      width: 100%;
+      height: 190px;
+      pointer-events: none;
+      z-index: 10;
+      transition: top 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      justify-content: space-around;
+      padding: 0 5%;
+    }
+    .top-decor.show {
+      top: 0;
+    }
+    .hanger {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform-origin: top center;
+      animation: sway 3.6s ease-in-out infinite alternate;
+    }
+    .hanger:nth-child(even) {
+      animation-duration: 4.4s;
+      animation-direction: alternate-reverse;
+    }
+    .string {
+      width: 1.5px;
+      background: rgba(245, 185, 66, 0.55);
+    }
+    .ornament {
+      filter: drop-shadow(0 0 10px rgba(245, 185, 66, 0.55));
+    }
+    @keyframes sway {
+      0% { transform: rotate(-4deg); }
+      100% { transform: rotate(4deg); }
+    }
+
+    /* Bottom 3D Gold & Black Balloons */
+    .bottom-balloons {
+      position: fixed;
+      bottom: -150px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      z-index: 12;
+      pointer-events: none;
+      transition: bottom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .bottom-balloons.show {
+      bottom: -18px;
+    }
+    .b-balloon {
+      width: 68px;
+      height: 82px;
+      border-radius: 50% 50% 48% 48%;
+      flex-shrink: 0;
+      box-shadow: inset -8px -10px 18px rgba(0,0,0,0.55), 0 6px 15px rgba(0,0,0,0.4);
+      animation: floatBottom 3s ease-in-out infinite alternate;
+    }
+    .b-balloon.gold {
+      background: radial-gradient(circle at 35% 30%, #ffe699 0%, #d4962a 55%, #7a4e08 100%);
+    }
+    .b-balloon.dark {
+      background: radial-gradient(circle at 35% 30%, #5c6784 0%, #1c2236 60%, #090c15 100%);
+    }
+    .b-balloon:nth-child(odd) {
+      transform: translateY(10px);
+    }
+    @keyframes floatBottom {
+      0% { margin-bottom: 0px; }
+      100% { margin-bottom: 7px; }
+    }
+
+    /* Main Stage Container */
+    .stage {
+      width: 92%;
+      max-width: 405px;
+      z-index: 20;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Screen Transitions */
+    .screen {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.55s ease forwards;
+    }
+    .screen.active {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Main Glass Card */
+    .glass-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 26px;
+      padding: 26px 20px;
+      text-align: center;
+      box-shadow: 0 0 35px rgba(82, 107, 255, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(14px);
+    }
+
+    /* Top Pill Header Card */
+    .header-pill {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 22px;
+      padding: 14px 16px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(82, 107, 255, 0.2);
+      backdrop-filter: blur(12px);
+      margin-bottom: 18px;
+    }
+
+    .cursive-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 12px rgba(255, 255, 255, 0.25);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    /* Cute Cat Avatar Box */
+    .sticker-box {
+      width: 105px;
+      height: 105px;
+      margin: 0 auto 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    /* Buttons */
+    .btn {
+      border: none;
+      outline: none;
+      width: 100%;
+      padding: 13px 22px;
+      border-radius: 14px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+    .btn-pink {
+      background: var(--pink-btn);
+      color: #fff;
+      box-shadow: 0 0 22px rgba(255, 42, 133, 0.55);
+    }
+    .btn-gold {
+      background: #f5b942;
+      color: #1b1300;
+      width: auto;
+      min-width: 140px;
+      box-shadow: 0 0 18px rgba(245, 185, 66, 0.5);
+    }
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+    .btn-purple {
+      background: linear-gradient(90deg, #9b2def, #d438ff);
+      color: #fff;
+      width: auto;
+      min-width: 150px;
+      box-shadow: 0 0 20px rgba(180, 50, 255, 0.5);
+    }
+    .btn-yellow {
+      background: #ffdd00;
+      color: #1a1600;
+      width: auto;
+      min-width: 210px;
+      box-shadow: 0 0 25px rgba(255, 221, 0, 0.6);
+    }
+
+    /* Step 2: Slot Machine Digits */
+    .slot-container {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin: 16px 0 20px;
+    }
+    .slot-box {
+      width: 68px;
+      height: 92px;
+      background: rgba(8, 12, 36, 0.85);
+      border: 1.5px solid rgba(245, 185, 66, 0.45);
+      border-radius: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      box-shadow: inset 0 0 14px rgba(0,0,0,0.8), 0 0 15px rgba(245, 185, 66, 0.2);
+    }
+
+    /* Step 3: 3D Flip Card (8 Things) */
+    .flip-wrapper {
+      perspective: 1000px;
+      width: 230px;
+      height: 225px;
+      margin: 6px auto 14px;
+      cursor: pointer;
+      position: relative;
+    }
+    .flip-wrapper::before,
+    .flip-wrapper::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 24px;
+      z-index: -1;
+      transform: rotate(-5deg) translateY(6px);
+    }
+    .flip-wrapper::after {
+      background: rgba(255, 255, 255, 0.45);
+      transform: rotate(4deg) translateY(10px);
+      z-index: -2;
+    }
+    .flip-card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
+    .flip-card.flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #ffffff, #e9e4f5);
+      color: #231942;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+      text-align: center;
+    }
+    .flip-front h3 {
+      font-size: 3.1rem;
+      background: linear-gradient(90deg, #b5179e, #7209b7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .flip-front span {
+      font-size: 0.85rem;
+      color: #6c5b7b;
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: #2d1e5f;
+      line-height: 1.45;
+    }
+
+    /* Step 4: Pop the Balloons */
+    .balloon-arena {
+      width: 100%;
+      height: 265px;
+      position: relative;
+      margin-top: 8px;
+    }
+    .pop-slot {
+      position: absolute;
+      width: 110px;
+      height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .pop-balloon {
+      width: 72px;
+      height: 88px;
+      border-radius: 50% 50% 48% 48%;
+      position: relative;
+      box-shadow: inset -8px -8px 16px rgba(0,0,0,0.35), 0 8px 18px rgba(0,0,0,0.3);
+      animation: floatPop 2.6s ease-in-out infinite alternate;
+    }
+    .pop-balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -36px;
+      left: 50%;
+      width: 1.5px;
+      height: 36px;
+      background: rgba(255,255,255,0.45);
+    }
+    @keyframes floatPop {
+      from { transform: translateY(0px) rotate(-2deg); }
+      to { transform: translateY(-10px) rotate(2deg); }
+    }
+    .popped-word {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: popReveal 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .popped-word .badge {
+      background: rgba(255, 255, 255, 0.95);
+      color: #16193b;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.35rem;
+      font-weight: 700;
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-top: 4px;
+      box-shadow: 0 4px 15px rgba(255,255,255,0.25);
+    }
+    @keyframes popReveal {
+      from { transform: scale(0.3); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Step 5: Single Photo Polaroid + 20 Years Time Spent Grid */
+    .single-photo-frame {
+      width: 132px;
+      background: #ffffff;
+      padding: 7px 7px 22px;
+      border-radius: 14px;
+      margin: 0 auto 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.45), 0 0 18px rgba(255, 93, 177, 0.35);
+      transform: rotate(-2deg);
+      position: relative;
+    }
+    .single-photo-frame img {
+      width: 100%;
+      height: 112px;
+      object-fit: cover;
+      border-radius: 9px;
+      display: block;
+      background: #e9ecf5;
+    }
+    .single-photo-caption {
+      position: absolute;
+      bottom: 3px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #231942;
+    }
+
+    .time-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+      width: 100%;
+      margin-bottom: 14px;
+    }
+    .stat-box {
+      background: rgba(10, 15, 45, 0.72);
+      border: 1px solid rgba(245, 185, 66, 0.35);
+      border-radius: 14px;
+      padding: 9px 8px;
+      text-align: center;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    .stat-box.wide {
+      grid-column: span 2;
+      background: linear-gradient(90deg, rgba(255, 42, 133, 0.16), rgba(155, 45, 239, 0.18));
+      border-color: rgba(255, 93, 177, 0.45);
+    }
+    .stat-num {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+    }
+    .stat-box.wide .stat-num {
+      color: #ff75b5;
+      font-size: 1.3rem;
+    }
+    .stat-label {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Step 6: Birthday Cake & Candles */
+    .cake-container {
+      margin: 26px auto 10px;
+      position: relative;
+      width: 260px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .candles-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: -4px;
+      z-index: 3;
+    }
+    .candle {
+      width: 12px;
+      height: 46px;
+      background: repeating-linear-gradient(
+        45deg,
+        #ffffff,
+        #ffffff 5px,
+        #c77dff 5px,
+        #c77dff 10px
+      );
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+    }
+    .flame {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 22px;
+      background: radial-gradient(ellipse at bottom, #fff75e 0%, #ff9e00 60%, #ff5400 100%);
+      border-radius: 50% 50% 35% 35%;
+      box-shadow: 0 0 14px #ff9e00, 0 0 25px #ff5400;
+      animation: flicker 0.6s infinite alternate;
+      cursor: pointer;
+    }
+    .flame.out {
+      display: none;
+    }
+    @keyframes flicker {
+      0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+      100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+    }
+    .cake-top {
+      width: 210px;
+      height: 34px;
+      background: #ffafcc;
+      border-radius: 18px 18px 0 0;
+      position: relative;
+      z-index: 2;
+    }
+    .cake-drips {
+      display: flex;
+      width: 210px;
+      justify-content: space-between;
+      margin-top: -6px;
+      z-index: 2;
+    }
+    .drip {
+      width: 26px;
+      height: 18px;
+      background: #ffafcc;
+      border-radius: 0 0 14px 14px;
+    }
+    .cake-Tier {
+      width: 210px;
+      height: 68px;
+      background: #f48fb1;
+      border-radius: 0 0 14px 14px;
+      margin-top: -10px;
+      box-shadow: inset 0 -8px 0 #ec407a;
+      z-index: 1;
+    }
+    .cake-plate {
+      width: 250px;
+      height: 16px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      margin-top: -4px;
+    }
+
+    /* Step 8: Scrollable Letter (Smooth Mobile Touch Scroll Added) */
+    .letter-scroll {
+      max-height: 220px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+      user-select: text;
+      text-align: left;
+      padding-right: 8px;
+      margin: 12px 0 20px;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: #dbe2ff;
+    }
+    .letter-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .letter-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+    }
+    .letter-scroll p {
+      margin-bottom: 12px;
+    }
+
+    /* Step 9: Gift Box */
+    .gift-wrapper {
+      margin: 30px auto 10px;
+      width: 150px;
+      height: 150px;
+      position: relative;
+      cursor: pointer;
+      animation: giftBounce 2s infinite ease-in-out;
+    }
+    @keyframes giftBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-6px) rotate(-3deg); }
+      75% { transform: translateY(-6px) rotate(3deg); }
+    }
+    .gift-lid {
+      width: 150px;
+      height: 36px;
+      background: #ff1f7a;
+      border-radius: 8px;
+      position: absolute;
+      top: 20px;
+      left: 0;
+      z-index: 3;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.7s;
+    }
+    .gift-lid::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 100%;
+      background: #ffd000;
+    }
+    .gift-bow {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 54px;
+      height: 24px;
+      border: 5px solid #ffd000;
+      border-radius: 20px 20px 0 0;
+    }
+    .gift-box-body {
+      width: 136px;
+      height: 95px;
+      background: #d81165;
+      border-radius: 0 0 12px 12px;
+      position: absolute;
+      bottom: 0;
+      left: 7px;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .gift-box-body::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 100%;
+      background: #ffd000;
+    }
+    .gift-wrapper.open .gift-lid {
+      transform: translateY(-75px) rotate(18deg);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Music Toggle -->
+  <button id="music-btn" onclick="toggleMusic()">🎵 Soothing Music: OFF</button>
+  <!-- Direct src on audio element so fallback works reliably if music.mp3 isn't uploaded -->
+  <audio id="bg-audio" src="music.mp3" loop preload="auto"></audio>
+
+  <!-- Top Hanging Moon & Stars -->
+  <div class="top-decor" id="top-decor">
+    <div class="hanger">
+      <div class="string" style="height: 55px;"></div>
+      <svg class="ornament" width="54" height="54" viewBox="0 0 60 60">
+        <path d="M40 10 A22 22 0 1 0 52 42 A18 18 0 1 1 40 10 Z" fill="#f5b942"/>
+      </svg>
+    </div>
+    <div class="hanger">
+      <div class="string" style="height: 30px;"></div>
+      <svg class="ornament" width="32" height="32" viewBox="0 0 50 50">
+        <polygon points="25,2 32,17 48,19 36,30 39,47 25,39 11,47 14,30 2,19 18,17" fill="#f5b942"/>
+      </svg>
+    </div>
+    <div class="hanger">
+      <div class="string" style="height: 68px;"></div>
+      <svg class="ornament" width="38" height="38" viewBox="0 0 50 50">
+        <polygon points="25,2 32,17 48,19 36,30 39,47 25,39 11,47 14,30 2,19 18,17" fill="#f5b942"/>
+      </svg>
+    </div>
+    <div class="hanger">
+      <div class="string" style="height: 38px;"></div>
+      <svg class="ornament" width="34" height="34" viewBox="0 0 60 60">
+        <path d="M38 12 A18 18 0 1 0 48 38 A14 14 0 1 1 38 12 Z" fill="#f5b942"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Main Interactive Stage -->
+  <div class="stage">
+
+    <!-- STEP 1: HELLO & DECORATE -->
+    <div class="screen active" id="step-1">
+      <div class="glass-card">
+        <div class="sticker-box">
+          <svg width="78" height="78" viewBox="0 0 100 100">
+            <path d="M22 42 L20 18 L40 30 Q50 27 60 30 L80 18 L78 42 Q86 56 80 72 Q68 84 50 84 Q32 84 20 72 Q14 56 22 42 Z" fill="#fff" stroke="#4a4e69" stroke-width="3"/>
+            <circle cx="37" cy="52" r="4" fill="#222"/>
+            <circle cx="63" cy="52" r="4" fill="#222"/>
+            <ellipse cx="30" cy="58" rx="5" ry="3" fill="#ffafcc"/>
+            <ellipse cx="70" cy="58" rx="5" ry="3" fill="#ffafcc"/>
+            <path d="M46 57 Q50 61 54 57" stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M42 70 Q50 64 58 70" stroke="#4a4e69" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h1 class="cursive-title">Hello, Roopali</h1>
+        <p class="subtitle" id="intro-subtext">
+          Today is your special day! But wait... this place is missing a little magic...
+        </p>
+        <button class="btn btn-pink" id="decorate-btn" onclick="decorateRoom()">
+          ✨ Let's Decorate
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: A SPECIAL NUMBER (20 YEARS COUNTER) -->
+    <div class="screen" id="step-2">
+      <div class="glass-card">
+        <h2 class="cursive-title">A Special Number</h2>
+        <p class="subtitle">Let's see how many wonderful years you've collected...</p>
+        <div class="slot-container">
+          <div class="slot-box" id="digit-1">?</div>
+          <div class="slot-box" id="digit-2">?</div>
+        </div>
+        <div id="slot-action-area">
+          <button class="btn btn-gold" onclick="spinAge()">✨ Reveal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: 8 THINGS ABOUT YOU -->
+    <div class="screen" id="step-3">
+      <div class="header-pill">
+        <h2 class="cursive-title" style="font-size: 2rem;">8 Things About You</h2>
+        <p class="subtitle" style="margin-bottom: 0;">Little things that make you iconic ✨</p>
+      </div>
+
+      <div class="flip-wrapper" onclick="toggleFlipCard()">
+        <div class="flip-card" id="trait-flip-card">
+          <div class="flip-face flip-front">
+            <h3 id="card-num-title">#1</h3>
+            <span>Tap to flip ✨</span>
+          </div>
+          <div class="flip-face flip-back" id="card-back-text">
+            Your humor😂, like I still remember teri harkate jo tune class me kri he🤣
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;" id="card-counter">1 / 8</p>
+      <button class="btn btn-purple" onclick="nextTraitCard()">Next →</button>
+    </div>
+
+    <!-- STEP 4: POP THE BALLOONS -->
+    <div class="screen" id="step-4">
+      <div class="header-pill">
+        <h2 class="cursive-title" style="font-size: 2rem;">Pop the Balloons</h2>
+        <p class="subtitle" style="margin-bottom: 0;">Tap to see what I think of you 🎈</p>
+      </div>
+
+      <div class="balloon-arena">
+        <!-- Balloon 1 -->
+        <div class="pop-slot" style="top: 10px; left: 12%;" onclick="popSingleBalloon(0)">
+          <div class="pop-balloon" id="pop-b-0" style="background: radial-gradient(circle at 30% 30%, #ff758f, #c9184a);"></div>
+          <div class="popped-word" id="pop-w-0">
+            <span style="font-size: 1.4rem;">💖</span>
+            <span class="badge">Pretty</span>
+          </div>
+        </div>
+        <!-- Balloon 2 -->
+        <div class="pop-slot" style="top: 5px; right: 12%;" onclick="popSingleBalloon(1)">
+          <div class="pop-balloon" id="pop-b-1" style="background: radial-gradient(circle at 30% 30%, #48cae4, #0077b6);"></div>
+          <div class="popped-word" id="pop-w-1">
+            <span style="font-size: 1.4rem;">✨</span>
+            <span class="badge">Smart</span>
+          </div>
+        </div>
+        <!-- Balloon 3 -->
+        <div class="pop-slot" style="bottom: 10px; left: 16%;" onclick="popSingleBalloon(2)">
+          <div class="pop-balloon" id="pop-b-2" style="background: radial-gradient(circle at 30% 30%, #c77dff, #5a189a);"></div>
+          <div class="popped-word" id="pop-w-2">
+            <span style="font-size: 1.4rem;">😂</span>
+            <span class="badge">Funniest</span>
+          </div>
+        </div>
+        <!-- Balloon 4 -->
+        <div class="pop-slot" style="bottom: 8px; right: 14%;" onclick="popSingleBalloon(3)">
+          <div class="pop-balloon" id="pop-b-3" style="background: radial-gradient(circle at 30% 30%, #ffd166, #e09f3e);"></div>
+          <div class="popped-word" id="pop-w-3">
+            <span style="font-size: 1.4rem;">🌟</span>
+            <span class="badge">Best Vibe</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: ROOPALI'S SINGLE PHOTO + 20 YEARS TIME SPENT ON EARTH -->
+    <div class="screen" id="step-5">
+      <div class="glass-card" style="padding: 20px 18px;">
+        <h2 class="cursive-title" style="font-size: 2rem; margin-bottom: 2px;">20 Years of Roopali ✨</h2>
+        <p class="subtitle" style="margin-bottom: 12px; font-size: 0.82rem;">
+          Look how much time you've spent making this world brighter!
+        </p>
+
+        <!-- ROOPALI KI SINGLE PHOTO (Save photo as 'roopali.jpg' in repo) -->
+        <div class="single-photo-frame">
+          <img
+            src="roopali.jpg"
+            alt="Roopali"
+            onerror="this.src=`data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 180'><rect width='200' height='180' fill='%23ffd6e0'/><text x='100' y='88' font-size='44' text-anchor='middle'>👑🎂✨</text><text x='100' y='135' font-size='15' font-family='sans-serif' fill='%235c374c' text-anchor='middle'>roopali.jpg</text></svg>`"
+          />
+          <div class="single-photo-caption">Birthday Girl 🎉</div>
+        </div>
+
+        <!-- 20 Years Time Breakdown -->
+        <div class="time-stats-grid">
+          <div class="stat-box">
+            <div class="stat-num">240</div>
+            <div class="stat-label">Months ✨</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">1,043</div>
+            <div class="stat-label">Weeks 🌸</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">7,305</div>
+            <div class="stat-label">Days ☀️</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">1,75,320</div>
+            <div class="stat-label">Hours ⏳</div>
+          </div>
+          <div class="stat-box wide">
+            <div class="stat-num" id="live-seconds">63,11,52,000</div>
+            <div class="stat-label">Seconds of Awesome Vibes & Counting 💫</div>
+          </div>
+        </div>
+
+        <button class="btn btn-pink" onclick="goToStep(6)">
+          Time for Cake 🎂 →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 6: MAKE A WISH (BLOW OUT 5 CANDLES) -->
+    <div class="screen" id="step-6">
+      <h2 class="cursive-title" style="font-size: 2.5rem;">Make a Wish!</h2>
+      <p class="subtitle" style="margin-bottom: 10px;">Tap the flame on each candle to blow it out.</p>
+
+      <div class="cake-container">
+        <div class="candles-row">
+          <div class="candle" onclick="blowCandle(0)"><div class="flame" id="flame-0"></div></div>
+          <div class="candle" onclick="blowCandle(1)"><div class="flame" id="flame-1"></div></div>
+          <div class="candle" onclick="blowCandle(2)"><div class="flame" id="flame-2"></div></div>
+          <div class="candle" onclick="blowCandle(3)"><div class="flame" id="flame-3"></div></div>
+          <div class="candle" onclick="blowCandle(4)"><div class="flame" id="flame-4"></div></div>
+        </div>
+        <div class="cake-top"></div>
+        <div class="cake-drips">
+          <div class="drip"></div><div class="drip"></div><div class="drip"></div>
+          <div class="drip"></div><div class="drip"></div><div class="drip"></div>
+        </div>
+        <div class="cake-Tier"></div>
+        <div class="cake-plate"></div>
+      </div>
+    </div>
+
+    <!-- STEP 7: YAY HAPPY BIRTHDAY CELEBRATION -->
+    <div class="screen" id="step-7">
+      <div class="sticker-box" style="background: transparent; border: none; box-shadow: none;">
+        <svg width="105" height="105" viewBox="0 0 100 100">
+          <polygon points="50,4 36,30 64,30" fill="#ffbe0b" stroke="#fb5607" stroke-width="2"/>
+          <circle cx="50" cy="4" r="4" fill="#ff006e"/>
+          <path d="M22 44 L20 22 L40 32 Q50 29 60 32 L80 22 L78 44 Q86 58 80 74 Q68 86 50 86 Q32 86 20 74 Q14 58 22 44 Z" fill="#fff" stroke="#4a4e69" stroke-width="3"/>
+          <path d="M32 52 Q37 46 42 52" stroke="#222" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M58 52 Q63 46 68 52" stroke="#222" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <polygon points="48,60 22,68 26,54" fill="#ff006e"/>
+        </svg>
+      </div>
+      <h2 class="cursive-title" style="font-size: 2.5rem; margin-bottom: 22px;">
+        Yay! Happy Birthday,<br>Roopali! 🎉
+      </h2>
+      <button class="btn btn-yellow" onclick="goToStep(8)">
+        Open Your Letter ✉️
+      </button>
+    </div>
+
+    <!-- STEP 8: CUSTOM BIRTHDAY LETTER (FIXED <p> TAGS & SCROLL) -->
+    <div class="screen" id="step-8">
+      <div class="glass-card">
+        <div class="sticker-box" style="width: 85px; height: 85px; margin-bottom: 10px;">
+          <svg width="62" height="62" viewBox="0 0 100 100">
+            <path d="M22 42 L20 18 L40 30 Q50 27 60 30 L80 18 L78 42 Q86 56 80 72 Q68 84 50 84 Q32 84 20 72 Q14 56 22 42 Z" fill="#fff"/>
+            <circle cx="37" cy="52" r="4" fill="#222"/>
+            <circle cx="63" cy="52" r="4" fill="#222"/>
+            <rect x="34" y="64" width="32" height="20" rx="4" fill="#f5b942"/>
+          </svg>
+        </div>
+
+        <h2 class="cursive-title" style="font-size: 2.1rem;">Dear Roopali ✨</h2>
+
+        <div class="letter-scroll" id="custom-birthday-message">
+          <p>Happiest 20th Birthday, Roopali!🎉</p>
+          <p>Roopali, firstly, tere mann me sawal aa rha hoga pakka ki itna sb kyu kra and all, to the answer is, nobody ever did for me, and somehow tujhse mujhe bahut similar vibe aati he, and yk I kinda relate to your story too, cuz bahut same he, that's why i made this, just by your friend, for my friend, nothing else. And roopali, ik tu bahut strong he, bahut kuch chal rha he teri life me, jo tu dikhne bhi nhi deti he, but what I want to say is, ik u r strong but there's no need to be strong infront of me, I mean, if u ever need a friend, I'm here, u can be weak infront of me, u can be vulnerable infront of me. U maybe thinking, esa kyu? answer is simple, I was alone, so I just don't want my friend to be alone in such situations, baaki if u ask why I chose b'day hi for saying this to even idk, but yk IRL me khud nhi bol paata sometimes itna sb serious baate, and txt pe fir apni baat hi kaha hoti he jyada😂. hehe bahut hua bhashan😂.</p>
+          <p>sun ab, kal he 21, clg aana he, mujhe party chahiye😤😤, deni hi padegi. Baaki ab vese tu teen nhi rhi, buddhi... I mean 20s me aa gyi he, i really pray ki tera ye new phase ekdum masttt rhe, and tu vo sb achieve kre jo tu chahti he, and tu bahut paisa bhi earn kre taaki tu mujhe partiess deti rhe😆😋.</p>
+          <p>Once again, Happy 20th Birthday my friend! 🙌🥳✨</p>
+        </div>
+
+        <button class="btn btn-pink" onclick="goToStep(9)">
+          One last thing →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 9: INTERACTIVE GIFT BOX -->
+    <div class="screen" id="step-9">
+      <h2 class="cursive-title" style="font-size: 2.3rem;">One last thing for you...</h2>
+      <p class="subtitle">Tap the gift to open 🎁</p>
+
+      <div class="gift-wrapper" id="gift-box" onclick="openGiftBox()">
+        <div class="gift-lid">
+          <div class="gift-bow"></div>
+        </div>
+        <div class="gift-box-body"></div>
+      </div>
+    </div>
+
+    <!-- STEP 10: FINAL FRIENDSHIP CARD -->
+    <div class="screen" id="step-10">
+      <div class="glass-card">
+        <div class="sticker-box" style="border-radius: 50%; width: 100px; height: 100px;">
+          <svg width="76" height="76" viewBox="0 0 120 100">
+            <circle cx="42" cy="56" r="24" fill="#ffffff"/>
+            <circle cx="78" cy="56" r="24" fill="#c9ada7"/>
+            <circle cx="36" cy="52" r="3" fill="#222"/>
+            <circle cx="48" cy="52" r="3" fill="#222"/>
+            <circle cx="72" cy="52" r="3" fill="#222"/>
+            <circle cx="84" cy="52" r="3" fill="#222"/>
+          </svg>
+        </div>
+        <h2 class="cursive-title" style="font-size: 2.05rem; margin-bottom: 14px;">
+          Thank you for being<br>such a great friend!
+        </h2>
+        <p class="subtitle" style="color: #eef1ff; font-size: 0.96rem; line-height: 1.6;">
+          I Hope ye chhotu sa surprise tujhe accha laga ho thoda, and made u smile. Happy 20th Birthday once again Roopaliiii🎉🥳
+        </p>
+        <p style="font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: var(--text-muted); margin-top: 10px;">
+          ~ The End ~
+        </p>
+        <button class="btn btn-outline" style="margin-top: 16px; width: auto; padding: 10px 20px; font-size: 0.85rem;" onclick="location.reload()">
+          🔄 Replay
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom 3D Gold & Dark Balloons -->
+  <div class="bottom-balloons" id="bottom-balloons">
+    <div class="b-balloon gold"></div>
+    <div class="b-balloon dark"></div>
+    <div class="b-balloon gold"></div>
+    <div class="b-balloon dark"></div>
+    <div class="b-balloon gold"></div>
+    <div class="b-balloon dark"></div>
+    <div class="b-balloon gold"></div>
+  </div>
+
+  <script>
+    /* ==========================================
+       1. SOOTHING / CALMING AMBIENT MUSIC BOX + RELIABLE MP3 FALLBACK
+       ========================================== */
+    let musicPlaying = false;
+    let audioCtx = null;
+    let melodyTimer = null;
+    let synthActive = false;
+    const bgAudio = document.getElementById('bg-audio');
+
+    // Dreamy, slow, calming Kalimba / Music-Box chord & melody notes
+    const soothingSequence = [
+      [523.25, 261.63, 0.9], [659.25, 261.63, 0.9], [783.99, 261.63, 1.2],
+      [659.25, 220.00, 0.9], [523.25, 220.00, 0.9], [440.00, 220.00, 1.2],
+      [349.23, 174.61, 0.9], [440.00, 174.61, 0.9], [523.25, 174.61, 1.2],
+      [392.00, 196.00, 0.9], [493.88, 196.00, 0.9], [587.33, 196.00, 1.4],
+      [392.00, 261.63, 0.65], [392.00, 261.63, 0.65], [440.00, 261.63, 1.1],
+      [392.00, 261.63, 1.1],  [523.25, 349.23, 1.1],  [493.88, 329.63, 1.8],
+      [392.00, 196.00, 0.65], [392.00, 196.00, 0.65], [440.00, 196.00, 1.1],
+      [392.00, 196.00, 1.1],  [587.33, 293.66, 1.1],  [523.25, 261.63, 2.0]
+    ];
+
+    function playSoothingSynth() {
+      if (!musicPlaying) return;
+      synthActive = true;
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      let now = audioCtx.currentTime + 0.08;
+      let totalTime = 0;
+
+      soothingSequence.forEach(([melodyFreq, padFreq, dur]) => {
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(melodyFreq, now);
+
+        gain1.gain.setValueAtTime(0.001, now);
+        gain1.gain.linearRampToValueAtTime(0.055, now + 0.08);
+        gain1.gain.exponentialRampToValueAtTime(0.0008, now + dur * 1.45);
+
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + dur * 1.5);
+
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(padFreq, now);
+
+        gain2.gain.setValueAtTime(0.001, now);
+        gain2.gain.linearRampToValueAtTime(0.025, now + 0.15);
+        gain2.gain.exponentialRampToValueAtTime(0.0008, now + dur * 1.5);
+
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(now);
+        osc2.stop(now + dur * 1.55);
+
+        now += dur;
+        totalTime += dur;
+      });
+
+      clearTimeout(melodyTimer);
+      melodyTimer = setTimeout(playSoothingSynth, totalTime * 1000);
+    }
+
+    // If music.mp3 fails to load (404), automatically switch to built-in soothing synth
+    bgAudio.addEventListener('error', () => {
+      if (musicPlaying && !synthActive) {
+        playSoothingSynth();
+      }
+    });
+
+    function toggleMusic() {
+      const btn = document.getElementById('music-btn');
+      if (!musicPlaying) {
+        musicPlaying = true;
+        btn.textContent = '🎵 Soothing Music: ON';
+        bgAudio.volume = 0.65;
+        bgAudio.play().catch(() => {
+          if (!synthActive) playSoothingSynth();
+        });
+      } else {
+        musicPlaying = false;
+        synthActive = false;
+        btn.textContent = '🎵 Soothing Music: OFF';
+        bgAudio.pause();
+        clearTimeout(melodyTimer);
+      }
+    }
+
+    /* ==========================================
+       2. STEP NAVIGATION & STEP 1 DECORATE
+       ========================================== */
+    let decorated = false;
+
+    function decorateRoom() {
+      if (!decorated) {
+        decorated = true;
+        if (!musicPlaying) toggleMusic();
+        document.getElementById('top-decor').classList.add('show');
+        document.getElementById('bottom-balloons').classList.add('show');
+        document.getElementById('intro-subtext').textContent =
+          "Perfect! A special little place, made just for you.";
+        const btn = document.getElementById('decorate-btn');
+        btn.innerHTML = "Let's Begin 🤍";
+      } else {
+        goToStep(2);
+      }
+    }
+
+    function goToStep(stepNumber) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-' + stepNumber).classList.add('active');
+    }
+
+    /* ==========================================
+       3. STEP 2: SLOT MACHINE (LANDS ON 20 FOR ROOPALI)
+       ========================================== */
+    function spinAge() {
+      const d1 = document.getElementById('digit-1');
+      const d2 = document.getElementById('digit-2');
+      const actionArea = document.getElementById('slot-action-area');
+
+      actionArea.innerHTML = `<p class="subtitle" style="margin: 10px 0;">Let's find out... ✨</p>`;
+
+      let ticks = 0;
+      const interval = setInterval(() => {
+        d1.textContent = Math.floor(Math.random() * 9);
+        d2.textContent = Math.floor(Math.random() * 9);
+        ticks++;
+        if (ticks > 22) {
+          clearInterval(interval);
+          d1.textContent = '2';
+          d2.textContent = '0';
+          launchConfetti(60);
+          actionArea.innerHTML = `
+            <p style="font-size: 0.95rem; font-weight: 500; margin-bottom: 16px;">
+              20 years of smiles, memories, and beautiful moments 🎉
+            </p>
+            <button class="btn btn-outline" onclick="goToStep(3)">Continue →</button>
+          `;
+        }
+      }, 75);
+    }
+
+    /* ==========================================
+       4. STEP 3: EXACT 8 THINGS REQUESTED BY USER
+       ========================================== */
+    const friendTraits = [
+      "Your humor😂, like I still remember teri harkate jo tune class me kri he🤣",
+      "your behaviour, I mean, tere sath somehow bahut kam time me hi bahut sahi vibe match ho gyi, mast lgta he tere saath💗😆",
+      "ofc your smile",
+      "Your looks. bahut pretty he yaar tu😖",
+      "teri bakchodi😆",
+      "teri positive energy",
+      "Teri Eyes👀",
+      "bs bs ab bahut he, itni bhi taareef ni krni hoti😂"
+    ];
+    let currentCardIdx = 0;
+
+    function toggleFlipCard() {
+      document.getElementById('trait-flip-card').classList.toggle('flipped');
+    }
+
+    function nextTraitCard() {
+      const card = document.getElementById('trait-flip-card');
+      card.classList.remove('flipped');
+      setTimeout(() => {
+        currentCardIdx++;
+        if (currentCardIdx >= friendTraits.length) {
+          goToStep(4);
+          return;
+        }
+        document.getElementById('card-num-title').textContent = '#' + (currentCardIdx + 1);
+        document.getElementById('card-back-text').textContent = friendTraits[currentCardIdx];
+        document.getElementById('card-counter').textContent = (currentCardIdx + 1) + ' / 8';
+      }, 220);
+    }
+
+    /* ==========================================
+       5. STEP 4: POP THE BALLOONS
+       ========================================== */
+    let poppedCount = 0;
+    const poppedState = [false, false, false, false];
+
+    function popSingleBalloon(idx) {
+      if (poppedState[idx]) return;
+      poppedState[idx] = true;
+      poppedCount++;
+
+      document.getElementById('pop-b-' + idx).style.display = 'none';
+      document.getElementById('pop-w-' + idx).style.display = 'flex';
+
+      if (poppedCount === 4) {
+        setTimeout(() => {
+          goToStep(5);
+        }, 1200);
+      }
+    }
+
+    /* ==========================================
+       6. STEP 5: LIVE TICKING SECONDS FOR 20 YEARS
+       ========================================== */
+    let baseSeconds = 631152000;
+    setInterval(() => {
+      baseSeconds++;
+      const el = document.getElementById('live-seconds');
+      if (el) {
+        el.textContent = baseSeconds.toLocaleString('en-IN');
+      }
+    }, 1000);
+
+    /* ==========================================
+       7. STEP 6: BLOW OUT 5 CANDLES + CONFETTI
+       ========================================== */
+    let blownCandles = [false, false, false, false, false];
+
+    function blowCandle(idx) {
+      if (blownCandles[idx]) return;
+      blownCandles[idx] = true;
+      document.getElementById('flame-' + idx).classList.add('out');
+
+      if (blownCandles.every(Boolean)) {
+        launchConfetti(150);
+        setTimeout(() => {
+          goToStep(7);
+        }, 1600);
+      }
+    }
+
+    /* ==========================================
+       8. STEP 9: GIFT BOX OPEN
+       ========================================== */
+    function openGiftBox() {
+      const box = document.getElementById('gift-box');
+      box.classList.add('open');
+      launchConfetti(120);
+      setTimeout(() => {
+        goToStep(10);
+      }, 1100);
+    }
+
+    /* ==========================================
+       9. CONFETTI ENGINE
+       ========================================== */
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function launchConfetti(count = 100) {
+      const colors = ['#ff2a85', '#f5b942', '#48cae4', '#c77dff', '#ffffff', '#06d6a0'];
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height * 0.5,
+          w: Math.random() * 8 + 5,
+          h: Math.random() * 6 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vy: Math.random() * 3 + 2,
+          vx: (Math.random() - 0.5) * 3,
+          angle: Math.random() * 360,
+          spin: (Math.random() - 0.5) * 8
+        });
+      }
+      requestAnimationFrame(updateConfetti);
+    }
+
+    function updateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.y += p.vy;
+        p.x += p.vx;
+        p.angle += p.spin;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.angle * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      particles = particles.filter(p => p.y < canvas.height + 20);
+      if (particles.length > 0) {
+        requestAnimationFrame(updateConfetti);
+      }
+    }
+  </script>
+</body>
+</html>
